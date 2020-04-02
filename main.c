@@ -7,19 +7,19 @@
 * Related Document: See Readme.md 
 *
 *******************************************************************************
-* Copyright (2018-2019), Cypress Semiconductor Corporation. All rights reserved.
+* (c) 2019-2020, Cypress Semiconductor Corporation. All rights reserved.
 *******************************************************************************
 * This software, including source code, documentation and related materials
-* (“Software”), is owned by Cypress Semiconductor Corporation or one of its
-* subsidiaries (“Cypress”) and is protected by and subject to worldwide patent
+* ("Software"), is owned by Cypress Semiconductor Corporation or one of its
+* subsidiaries ("Cypress") and is protected by and subject to worldwide patent
 * protection (United States and foreign), United States copyright laws and
 * international treaty provisions. Therefore, you may use this Software only
 * as provided in the license agreement accompanying the software package from
-* which you obtained this Software (“EULA”).
+* which you obtained this Software ("EULA").
 *
-* If no EULA applies, Cypress hereby grants you a personal, nonexclusive,
+* If no EULA applies, Cypress hereby grants you a personal, non-exclusive,
 * non-transferable license to copy, modify, and compile the Software source
-* code solely for use in connection with Cypress’s integrated circuit products.
+* code solely for use in connection with Cypress's integrated circuit products.
 * Any reproduction, modification, translation, compilation, or representation
 * of this Software except as specified above is prohibited without the express
 * written permission of Cypress.
@@ -32,8 +32,8 @@
 * Software or any product or circuit described in the Software. Cypress does
 * not authorize its products for use in any products where a malfunction or
 * failure of the Cypress product may reasonably be expected to result in
-* significant property damage, injury or death (“High Risk Product”). By
-* including Cypress’s product in a High Risk Product, the manufacturer of such
+* significant property damage, injury or death ("High Risk Product"). By
+* including Cypress's product in a High Risk Product, the manufacturer of such
 * system or application assumes all risk of such use and in doing so agrees to
 * indemnify Cypress against all liability.
 *******************************************************************************/
@@ -47,7 +47,7 @@
 * Function Name: handle_error
 ********************************************************************************
 * Summary:
-* User defined error handling function
+* User defined error handling function.
 *
 * Parameters:
 *  void
@@ -69,7 +69,7 @@ void handle_error(void)
 ********************************************************************************
 * Summary:
 * This is the main function for CM4 CPU.
-*	Reads one byte from the serial terminal and echoes back the read byte
+* Reads one byte from the serial terminal and echoes back the read byte.
 *
 * Parameters:
 *  void
@@ -81,16 +81,20 @@ void handle_error(void)
 int main(void)
 {
     cy_rslt_t result;
+
     /* Set up the device based on configurator selections */
     result = cybsp_init();
-	if(result != CY_RSLT_SUCCESS)
-	{
-		handle_error();
-	}
-    result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX, CY_RETARGET_IO_BAUDRATE);
-    if(result != CY_RSLT_SUCCESS)
+    if (result != CY_RSLT_SUCCESS)
     {
-    	handle_error();
+        handle_error();
+    }
+
+     result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX,
+                                 CY_RETARGET_IO_BAUDRATE);
+
+    if (result != CY_RSLT_SUCCESS)
+    {
+        handle_error();
     }
 
     /* \x1b[2J\x1b[;H - ANSI ESC sequence for clear screen */
@@ -100,22 +104,25 @@ int main(void)
     printf("PSoC 6 MCU UART Transmit and Receive\r\n");
     printf("************************************************************\r\n\n");
     printf(">> Start typing to see the echo on the screen \r\n\n");
+
     __enable_irq();
 
     uint8_t read_data;
  
-    for(;;)
+    for (;;)
     {
-    	if(CY_SCB_UART_SUCCESS == cyhal_uart_getc(&cy_retarget_io_uart_obj, &read_data, 0))
-    	{
-    		if(CY_SCB_UART_SUCCESS != cyhal_uart_putc(&cy_retarget_io_uart_obj, read_data))
-    		{
-    			handle_error();
-    		}
-    	}
-    	else
-    	{
-    		handle_error();
-    	}
+        if (CY_RSLT_SUCCESS == cyhal_uart_getc(&cy_retarget_io_uart_obj, &read_data, 0))
+        {
+            if (CY_RSLT_SUCCESS != cyhal_uart_putc(&cy_retarget_io_uart_obj, read_data))
+            {
+                handle_error();
+            }
+        }
+        else
+        {
+            handle_error();
+        }
     }
 }
+
+/* [] END OF FILE */

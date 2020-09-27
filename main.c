@@ -81,17 +81,19 @@ void handle_error(void)
 int main(void)
 {
     cy_rslt_t result;
+    uint8_t read_data; /* Variable to store the received character
+                        * through terminal */
 
-    /* Set up the device based on configurator selections */
+    /* Initialize the device and board peripherals */
     result = cybsp_init();
     if (result != CY_RSLT_SUCCESS)
     {
         handle_error();
     }
 
-     result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX,
+    /* Initialize retarget-io to use the debug UART port */
+    result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX,
                                  CY_RETARGET_IO_BAUDRATE);
-
     if (result != CY_RSLT_SUCCESS)
     {
         handle_error();
@@ -100,20 +102,20 @@ int main(void)
     /* \x1b[2J\x1b[;H - ANSI ESC sequence for clear screen */
     printf("\x1b[2J\x1b[;H");
 
-    printf("************************************************************\r\n");
+    printf("***********************************************************\r\n");
     printf("PSoC 6 MCU UART Transmit and Receive\r\n");
-    printf("************************************************************\r\n\n");
+    printf("***********************************************************\r\n\n");
     printf(">> Start typing to see the echo on the screen \r\n\n");
 
     __enable_irq();
-
-    uint8_t read_data;
  
     for (;;)
     {
-        if (CY_RSLT_SUCCESS == cyhal_uart_getc(&cy_retarget_io_uart_obj, &read_data, 0))
+        if (CY_RSLT_SUCCESS == cyhal_uart_getc(&cy_retarget_io_uart_obj,
+                                               &read_data, 0))
         {
-            if (CY_RSLT_SUCCESS != cyhal_uart_putc(&cy_retarget_io_uart_obj, read_data))
+            if (CY_RSLT_SUCCESS != cyhal_uart_putc(&cy_retarget_io_uart_obj,
+                                                   read_data))
             {
                 handle_error();
             }

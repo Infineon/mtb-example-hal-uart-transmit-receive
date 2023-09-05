@@ -101,13 +101,26 @@ int main(void)
     }
 
     /* Initialize retarget-io to use the debug UART port */
+#ifdef XMC72_EVK
     result = cy_retarget_io_init(CYBSP_DEBUG_UART_TX, CYBSP_DEBUG_UART_RX,
                                  CY_RETARGET_IO_BAUDRATE);
+
     if (result != CY_RSLT_SUCCESS)
     {
         handle_error();
     }
+#else
+    result = cy_retarget_io_init_fc(CYBSP_DEBUG_UART_TX, 
+                                    CYBSP_DEBUG_UART_RX,
+                                    CYBSP_DEBUG_UART_CTS,
+                                    CYBSP_DEBUG_UART_RTS,
+                                    CY_RETARGET_IO_BAUDRATE);
 
+    if (result != CY_RSLT_SUCCESS)
+    {
+        handle_error();
+    }
+#endif
     /* \x1b[2J\x1b[;H - ANSI ESC sequence for clear screen */
     printf("\x1b[2J\x1b[;H");
 

@@ -141,6 +141,10 @@ PREBUILD=
 # Custom post-build commands to run.
 POSTBUILD=
 
+# Additional / custom linker flags.
+ifeq ($(TARGET), $(filter $(TARGET), APP_KIT_XMC72_EVK))
+DEFINES+=XMC72_EVK
+endif
 
 ################################################################################
 # Paths
